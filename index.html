@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alineación Fútbol 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#eef2ee; --surface:#ffffff; --fg:#17231b; --muted:#5b6b60; --line:#d3ddd5;
+  --turf:#2f7a45; --turf-2:#2a6f3f; --chalk:rgba(255,255,255,.75);
+  --accent:#f2b705; --accent-fg:#1d1600;
+  --ok:#1f8a4c; --warn:#b86a00;
+  --shirt:#ffffff; --shirt-fg:#17231b;
+  --display:"Saira Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0f1712; --surface:#17221b; --fg:#e7efe9; --muted:#9aaba0; --line:#2a3a30;
+  --turf:#1f5a32; --turf-2:#1b5130; --chalk:rgba(255,255,255,.55);
+  --accent:#f5c431; --accent-fg:#1d1600;
+  --ok:#4cc27e; --warn:#e3a13a;
+  --shirt:#f3f6f4; --shirt-fg:#122018; color-scheme:dark }}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,40px);line-height:1;margin:0;text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+.formation{font-family:var(--display);font-weight:800;font-size:22px;background:var(--accent);color:var(--accent-fg);padding:2px 12px;border-radius:4px;letter-spacing:.06em}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:8px 14px;border-radius:8px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:820px){.main{grid-template-columns:1fr}}
+
+.pitch{position:relative;border-radius:12px;overflow:hidden;padding:18px 10px;
+  background:repeating-linear-gradient(180deg,var(--turf) 0 12.5%,var(--turf-2) 12.5% 25%);
+  display:grid;grid-template-rows:repeat(4,auto);gap:clamp(14px,3vw,28px);min-height:560px;align-content:space-between}
+.pitch::before{content:"";position:absolute;inset:10px;border:2px solid var(--chalk);border-radius:4px;pointer-events:none}
+.pitch .mid{position:absolute;left:10px;right:10px;top:50%;border-top:2px solid var(--chalk);pointer-events:none}
+.pitch .circle{position:absolute;left:50%;top:50%;width:90px;height:90px;border:2px solid var(--chalk);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+.pitch .box{position:absolute;left:50%;width:44%;height:12%;border:2px solid var(--chalk);transform:translateX(-50%);pointer-events:none}
+.pitch .box.top{top:10px;border-top:none}
+.pitch .box.bot{bottom:10px;border-bottom:none}
+.line{position:relative;z-index:1;display:flex;justify-content:space-evenly;gap:6px;flex-wrap:nowrap}
+.slot{display:grid;justify-items:center;gap:4px;width:clamp(96px,28%,150px);min-width:0}
+.shirt{width:52px;height:52px;border-radius:50%;background:var(--shirt);color:var(--shirt-fg);display:grid;place-items:center;
+  font-family:var(--display);font-weight:800;font-size:22px;box-shadow:0 2px 0 rgba(0,0,0,.25);border:3px solid transparent}
+.shirt.gk{background:var(--accent);color:var(--accent-fg)}
+.shirt.empty{background:transparent;border:2px dashed var(--chalk);color:var(--chalk)}
+.slot .name{color:#fff;font-weight:600;font-size:13px;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.5);line-height:1.2;min-height:1.2em;overflow-wrap:anywhere}
+.slot .pos{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.12em;color:var(--chalk);text-transform:uppercase}
+.slot select{width:100%;font:inherit;font-size:13px;padding:5px 6px;border-radius:6px;border:1px solid rgba(0,0,0,.2);background:var(--surface);color:var(--fg)}
+.flag{font-size:11px;font-weight:600;padding:1px 6px;border-radius:999px;background:rgba(0,0,0,.35);color:#fff}
+.flag.warn{background:var(--warn);color:#fff}
+
+.panel{display:grid;gap:16px;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h2{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:18px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+.card h2 small{font-family:var(--body);font-weight:500;font-size:12px;color:var(--muted);letter-spacing:0;text-transform:none}
+ul.roster{list-style:none;margin:0;padding:0;display:grid}
+ul.roster li{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
+ul.roster li:first-child{border-top:none}
+.num{font-family:var(--display);font-weight:800;font-size:18px;text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+.who{min-width:0}
+.who b{font-weight:600}
+.who span{display:block;font-size:12px;color:var(--muted)}
+.chip{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.chip.on{background:var(--accent);color:var(--accent-fg)}
+.note{font-size:13px;color:var(--muted);margin:0}
+.status{font-size:13px;color:var(--ok);min-height:1.2em}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Alineación Fútbol 7</h1>
+      <p class="sub">Elige a cada jugador en su posición. La banca se arma sola con quien quede fuera. El portero va de amarillo.</p>
+    </div>
+    <span class="formation" aria-label="Formación">1 · 2 · 3 · 1</span>
+  </header>
+
+  <div class="actions">
+    <button class="primary" id="btn-ideal" type="button">Cargar alineación ideal</button>
+    <button id="btn-clear" type="button">Vaciar cancha</button>
+    <button id="btn-copy" type="button">Copiar para WhatsApp</button>
+    <span class="status" id="status" role="status"></span>
+  </div>
+
+  <div class="main">
+    <section class="pitch" aria-label="Cancha">
+      <div class="mid"></div><div class="circle"></div><div class="box top"></div><div class="box bot"></div>
+      <div class="line" data-row="DEL"></div>
+      <div class="line" data-row="MED"></div>
+      <div class="line" data-row="DEF"></div>
+      <div class="line" data-row="POR"></div>
+    </section>
+
+    <aside class="panel">
+      <div class="card">
+        <h2>Banca <small id="bench-count"></small></h2>
+        <ul class="roster" id="bench"></ul>
+      </div>
+      <div class="card">
+        <h2>Plantel <small>13 jugadores</small></h2>
+        <ul class="roster" id="roster"></ul>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const PLAYERS = [
+  {id:1,  name:"Mario Soto",        num:"1",  size:"XL", pos:["POR"],        note:"Portero"},
+  {id:2,  name:"Leo",               num:"5",  size:"L",  pos:["MED"],        note:"Medio"},
+  {id:3,  name:"Fernando Castro",   num:"3",  size:"M",  pos:["DEF"],        note:"Defensa"},
+  {id:4,  name:"Miguel Rosas",      num:"8",  size:"M",  pos:["MED"],        note:"Medio"},
+  {id:5,  name:"Juan Carlos Cantú", num:"10", size:"M",  pos:["DEF","MED"],  note:"Defensa o Medio"},
+  {id:6,  name:"Andrés Arana",      num:"15", size:"L",  pos:["MED"],        note:"Medio"},
+  {id:7,  name:"Armando Mantecón",  num:"14", size:"M",  pos:["DEF"],        note:"Defensa"},
+  {id:8,  name:"Benito Marcos",     num:"16", size:"L",  pos:["DEL"],        note:"Delantero"},
+  {id:9,  name:"Andree",            num:"9",  size:"XL", pos:["DEL"],        note:"Delantero"},
+  {id:10, name:"Adrián Varela",     num:"19", size:"L",  pos:["DEF"],        note:"Defensa"},
+  {id:11, name:"Paco Olmedo",       num:"11", size:"M",  pos:["MED"],        note:"Medio"},
+  {id:12, name:"Jonathan",          num:"7",  size:"L",  pos:["DEL"],        note:"Delantero"},
+  {id:13, name:"David R",           num:"4",  size:"L",  pos:["MED","DEF"],  note:"Medio o Defensa"},
+];
+const SLOTS = [
+  {key:"POR",  row:"POR", pos:"POR", label:"Portero"},
+  {key:"DEF1", row:"DEF", pos:"DEF", label:"Defensa izq."},
+  {key:"DEF2", row:"DEF", pos:"DEF", label:"Defensa der."},
+  {key:"MED1", row:"MED", pos:"MED", label:"Medio izq."},
+  {key:"MED2", row:"MED", pos:"MED", label:"Medio centro"},
+  {key:"MED3", row:"MED", pos:"MED", label:"Medio der."},
+  {key:"DEL",  row:"DEL", pos:"DEL", label:"Delantero"},
+];
+const IDEAL = {POR:1, DEF1:5, DEF2:3, MED1:4, MED2:2, MED3:6, DEL:8};
+const byId = id => PLAYERS.find(p => p.id === id);
+const STORE = "f7-lineup-v4";
+
+let lineup = load() || {...IDEAL};
+
+function load(){ try{ const v = JSON.parse(localStorage.getItem(STORE)); return v && typeof v === "object" ? v : null }catch(e){ return null } }
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(lineup)) }catch(e){} }
+function slotOf(pid){ return Object.keys(lineup).find(k => lineup[k] === pid) }
+function label(p){ return (p.num ? "#"+p.num+" " : "") + p.name }
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])) }
+
+function renderPitch(){
+  document.querySelectorAll(".line").forEach(l => l.innerHTML = "");
+  SLOTS.forEach(s => {
+    const pid = lineup[s.key] || null;
+    const p = pid ? byId(pid) : null;
+    const off = p && !p.pos.includes(s.pos);
+    const el = document.createElement("div");
+    el.className = "slot";
+    const natural = PLAYERS.filter(x => x.pos.includes(s.pos));
+    const others = PLAYERS.filter(x => !x.pos.includes(s.pos));
+    const opt = x => {
+      const where = slotOf(x.id);
+      const tag = where && where !== s.key ? "  (en " + SLOTS.find(z=>z.key===where).label + ")" : "";
+      return `<option value="${x.id}" ${x.id===pid?"selected":""}>${esc(label(x))}${esc(tag)}</option>`;
+    };
+    el.innerHTML = `
+      <span class="pos">${s.label}</span>
+      <div class="shirt ${s.pos==="POR"?"gk":""} ${p?"":"empty"}">${p ? (p.num || p.name[0]) : "+"}</div>
+      <div class="name">${p ? esc(p.name) : "Sin asignar"}</div>
+      ${off ? `<span class="flag warn">Fuera de su posición</span>` : ""}
+      <select id="sel-${s.key}" aria-label="${s.label}">
+        <option value="">— Vacío —</option>
+        <optgroup label="Juegan de ${s.pos}">${natural.map(opt).join("")}</optgroup>
+        <optgroup label="Otros">${others.map(opt).join("")}</optgroup>
+      </select>`;
+    el.querySelector("select").addEventListener("change", e => assign(s.key, e.target.value ? +e.target.value : null));
+    document.querySelector(`.line[data-row="${s.row}"]`).appendChild(el);
+  });
+}
+
+function assign(key, pid){
+  const prevHere = lineup[key] || null;
+  const from = pid ? slotOf(pid) : null;
+  if (from && from !== key) lineup[from] = prevHere;
+  lineup[key] = pid;
+  save(); render();
+}
+
+function renderLists(){
+  const onField = new Set(Object.values(lineup).filter(Boolean));
+  const bench = PLAYERS.filter(p => !onField.has(p.id));
+  document.getElementById("bench-count").textContent = bench.length + " jugadores";
+  document.getElementById("bench").innerHTML = bench.map(p => row(p, false)).join("") || `<li><span></span><span class="note">Nadie en la banca.</span><span></span></li>`;
+  document.getElementById("roster").innerHTML = PLAYERS.map(p => row(p, onField.has(p.id))).join("");
+}
+function row(p, on){
+  const meta = [p.note, p.size && "Talla " + p.size].filter(Boolean).join(" · ");
+  const chip = on ? `<span class="chip on">En cancha</span>` : `<span></span>`;
+  return `<li><span class="num">${p.num || "–"}</span><span class="who"><b>${esc(p.name)}</b><span>${esc(meta)}</span></span>${chip}</li>`;
+}
+
+function render(){ renderPitch(); renderLists(); }
+
+function textLineup(){
+  const name = k => { const p = byId(lineup[k]); return p ? label(p) : "—" };
+  const onField = new Set(Object.values(lineup).filter(Boolean));
+  const bench = PLAYERS.filter(p => !onField.has(p.id)).map(label);
+  return [
+    "⚽ Alineación 1-2-3-1",
+    "🧤 POR: " + name("POR"),
+    "🛡️ DEF: " + name("DEF1") + " / " + name("DEF2"),
+    "⚙️ MED: " + name("MED1") + " / " + name("MED2") + " / " + name("MED3"),
+    "🎯 DEL: " + name("DEL"),
+    "🪑 Banca: " + (bench.join(", ") || "—"),
+  ].join("\n");
+}
+function flash(msg){ const s = document.getElementById("status"); s.textContent = msg; clearTimeout(flash.t); flash.t = setTimeout(()=> s.textContent = "", 2500); }
+
+document.getElementById("btn-ideal").addEventListener("click", () => { lineup = {...IDEAL}; save(); render(); flash("Alineación ideal cargada"); });
+document.getElementById("btn-clear").addEventListener("click", () => { lineup = {}; save(); render(); flash("Cancha vacía"); });
+document.getElementById("btn-copy").addEventListener("click", () => {
+  const t = textLineup();
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(() => flash("Copiada, pégala en el grupo"), () => fallback(t));
+  } else fallback(t);
+});
+function fallback(t){
+  const ta = document.createElement("textarea"); ta.value = t; ta.style.cssText = "position:fixed;opacity:0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); flash("Copiada, pégala en el grupo") }catch(e){ flash("No se pudo copiar") }
+  ta.remove();
+}
+
+render();
+</script>
+</body>
+</html>
